@@ -1,0 +1,308 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "PHP Tinder API",
+        "description": "API documentation for the PHP Tinder app.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Primary API server"
+        }
+    ],
+    "paths": {
+        "/people": {
+            "get": {
+                "tags": [
+                    "people"
+                ],
+                "summary": "List of recommended people (paginated)",
+                "description": "Returns paginated people list. Client uses 0-based `page`.",
+                "operationId": "962598b6221384088e509b5a6a992d3f",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "0-based page index",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Items per page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PagePerson"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/people/{id}/like": {
+            "post": {
+                "tags": [
+                    "people"
+                ],
+                "summary": "Like a person",
+                "description": "Like a person",
+                "operationId": "9ca1b73b0ea8c9be75705e22990243a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-Device-Id",
+                        "in": "header",
+                        "description": "Anonymous device id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "liked": {
+                                            "type": "boolean"
+                                        },
+                                        "person_id": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "X-Device-Id required"
+                    }
+                }
+            }
+        },
+        "/people/{id}/dislike": {
+            "post": {
+                "tags": [
+                    "people"
+                ],
+                "summary": "Dislike a person",
+                "description": "Dislike a person",
+                "operationId": "079025c24928c1f1071f6f71417911a8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-Device-Id",
+                        "in": "header",
+                        "description": "Anonymous device id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "disliked": {
+                                            "type": "boolean"
+                                        },
+                                        "person_id": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "X-Device-Id required"
+                    }
+                }
+            }
+        },
+        "/people/liked": {
+            "get": {
+                "tags": [
+                    "people"
+                ],
+                "summary": "Get liked people for this device",
+                "description": "Liked opponents (by device)",
+                "operationId": "4ba543911d542e18c853a08ad27ed437",
+                "parameters": [
+                    {
+                        "name": "X-Device-Id",
+                        "in": "header",
+                        "description": "Anonymous device id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Person"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "X-Device-Id required"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Picture": {
+                "properties": {
+                    "url": {
+                        "description": "====== Component Schemas ======",
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "type": "object"
+            },
+            "Location": {
+                "properties": {
+                    "lat": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "lng": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "city": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "distanceKm": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Person": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "integer"
+                    },
+                    "location": {
+                        "$ref": "#/components/schemas/Location"
+                    },
+                    "pictures": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Picture"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PagePerson": {
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Person"
+                        }
+                    },
+                    "page": {
+                        "description": "0-based page index",
+                        "type": "integer"
+                    },
+                    "size": {
+                        "type": "integer"
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "people",
+            "description": "people"
+        }
+    ]
+}
